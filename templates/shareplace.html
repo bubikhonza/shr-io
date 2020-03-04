@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>SHR.IO</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+    <div class="jumbotron dark">
+        <a href="{% url 'index' %}">< back</a>
+        <h2 class="display-4"><span id="code_span">{{code}}</span>
+        <button class="btn btn-warning" onclick="copyToClipboard();">Copy to clipboard</button>
+        <a href="{% url 'remove_shareplace' code %}" style="cursor: pointer; color:white;" class="btn btn-danger" onclick="return confirm('Are you sure?')">Remove shareplace</a></h2>
+        <p class="lead">You can access your shareplace via code above.</p>
+        <hr class="my-4">
+        {% for item in items %}
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                <div class="col-11"><p>{{item.text}}</p>
+                <a href="{{item.file}}">{{item.file}}</a>
+                <p>{{item.image}}</p>
+                </div>
+                <div class="col-1"><a href="{% url 'remove_item' item.id %}" style="cursor: pointer; color:white;" class="btn btn-danger">Remove</a></div>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="exampleInputEmail1">Your text</label>
+                <textarea class="form-control" id="textarea" name="textarea" rows="3"></textarea>
+                <input type="file" name="myfile">
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script>
+        const copyToClipboard = str => {
+            const el = document.createElement('textarea');
+            el.value = window.location.protocol + "//" + window.location.host + "/?code="+ document.getElementById('code_span').innerHTML;;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        };
+
+        localStorage.setItem(0, "{{code}}");
+    </script>
+</body>
+</html>
